@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
-import ChatCard from "./ChatCard";
+import ChatCard from "./chatCard";
 import UnreadCountBadge from "./UnreadCountBadge";
 import GroupChatAvatar from "./GroupChatAvatar";
 
