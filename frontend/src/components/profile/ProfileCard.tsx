@@ -21,7 +21,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
   const isOnline = onlineUsers.includes(user._id) ? true : false;
 
   return (
-    <Card className="overflow-hidden p-0 h-52 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <Card className="overflow-hidden p-0 h-52 bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400">
       <CardContent className="mt-20 pb-8 flex flex-col sm:flex-row items-center sm:items-end gap-6">
         <div className="relative">
           <UserAvatar
