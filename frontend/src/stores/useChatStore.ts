@@ -103,17 +103,10 @@ export const useChatStore = create<ChatState>()(
         }
 
         try {
-          const message = await chatService.sendDirectMessage(
+          const  message = await chatService.sendDirectMessage(
             recipientId, content, imgUrl, activeConversationId || undefined
           );
-          // thay temp message bằng message thật (id server trả về)
-          set((state) => {
-            const convoId = message.conversationId;
-            const items = (state.messages[convoId]?.items ?? []).map((m) =>
-              m._id === tempId ? { ...message, isOwn: true } : m
-            );
-            return { messages: { ...state.messages, [convoId]: { ...state.messages[convoId], items } } };
-          });
+          await addMessage(message);
         } catch (error) {
           // xoá temp message nếu gửi thất bại, hoặc đánh dấu lỗi
           console.error("Lỗi xảy ra khi gửi direct message", error);
@@ -149,15 +142,29 @@ export const useChatStore = create<ChatState>()(
           }
 
           set((state) => {
+            // Nếu message thật này đã có trong mảng rồi (đường kia tới trước) -> bỏ qua
             if (prevItems.some((m) => m._id === message._id)) {
               return state;
             }
+
+            // Nếu đang có tin nhắn tạm (pending) của chính người gửi này với cùng nội dung -> thay thế nó
+            const tempIndex = prevItems.findIndex(
+              (m) =>
+                (m as any).pending &&
+                m.senderId === message.senderId &&
+                m.content === message.content
+            );
+
+            const items =
+              tempIndex !== -1
+                ? prevItems.map((m, i) => (i === tempIndex ? message : m))
+                : [...prevItems, message];
 
             return {
               messages: {
                 ...state.messages,
                 [convoId]: {
-                  items: [...prevItems, message],
+                  items,
                   hasMore: state.messages[convoId].hasMore,
                   nextCursor: state.messages[convoId].nextCursor ?? undefined,
                 },
