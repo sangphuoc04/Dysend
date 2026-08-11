@@ -1,5 +1,5 @@
 import type { Conversation } from "@/types/chat";
-import ChatCard from "./chatCard";
+import ChatCard from "./ChatCard";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
 import { cn } from "@/libs/utils";
