@@ -85,21 +85,39 @@ export const useChatStore = create<ChatState>()(
         }
       },
       sendDirectMessage: async (recipientId, content, imgUrl) => {
-        try {
-          const { activeConversationId } = get();
-          await chatService.sendDirectMessage(
-            recipientId,
+        const { activeConversationId, addMessage } = get();
+        const { user } = useAuthStore.getState();
+        const tempId = `temp-${Date.now()}`;
+
+        // optimistic: hiển thị ngay
+        if (activeConversationId && user) {
+          addMessage({
+            _id: tempId,
+            conversationId: activeConversationId,
+            senderId: user._id,
             content,
-            imgUrl,
-            activeConversationId || undefined
+            createdAt: new Date().toISOString(),
+            isOwn: true,
+            pending: true, // để UI show icon "đang gửi"
+          } as any);
+        }
+
+        try {
+          const { message } = await chatService.sendDirectMessage(
+            recipientId, content, imgUrl, activeConversationId || undefined
           );
-          set((state) => ({
-            conversations: state.conversations.map((c) =>
-              c._id === activeConversationId ? { ...c, seenBy: [] } : c
-            ),
-          }));
+          // thay temp message bằng message thật (id server trả về)
+          set((state) => {
+            const convoId = message.conversationId;
+            const items = (state.messages[convoId]?.items ?? []).map((m) =>
+              m._id === tempId ? { ...message, isOwn: true } : m
+            );
+            return { messages: { ...state.messages, [convoId]: { ...state.messages[convoId], items } } };
+          });
         } catch (error) {
+          // xoá temp message nếu gửi thất bại, hoặc đánh dấu lỗi
           console.error("Lỗi xảy ra khi gửi direct message", error);
+          throw error;
         }
       },
       sendGroupMessage: async (conversationId, content, imgUrl) => {

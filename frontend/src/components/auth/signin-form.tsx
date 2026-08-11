@@ -52,7 +52,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                   className="mx-auto block w-fit text-center"
                 >
                   <img
-                    src="/logo.svg"
+                    src="/logo.png"
                     alt="logo"
                   />
                 </a>
