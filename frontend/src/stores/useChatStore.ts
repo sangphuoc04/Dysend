@@ -103,7 +103,7 @@ export const useChatStore = create<ChatState>()(
         }
 
         try {
-          const { message } = await chatService.sendDirectMessage(
+          const message = await chatService.sendDirectMessage(
             recipientId, content, imgUrl, activeConversationId || undefined
           );
           // thay temp message bằng message thật (id server trả về)
