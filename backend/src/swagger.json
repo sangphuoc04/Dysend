@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DySend",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "{{base_url}}"
+    },
+    {
+      "url": ""
+    }
+  ],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "summary": "Signup",
+        "responses": {}
+      }
+    },
+    "/auth/signIn": {
+      "post": {
+        "summary": "Signin",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "color"
+                  }
+                }
+              },
+              "example": {
+                "username": "user2",
+                "password": "abc"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "summary": "Test autherization",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signout": {
+      "post": {
+        "summary": "Signout",
+        "responses": {}
+      }
+    },
+    "/friends/requests": {
+      "post": {
+        "summary": "SendFriendRequests",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "to": "6a7059437539874e8fca689b",
+                "message": "Hello mot"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/requests/6a7433c581f8692ee12392a8/accept": {
+      "post": {
+        "summary": "AcceptFriendRequests",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/requests/6a7433c581f8692ee12392a8/decline": {
+      "post": {
+        "summary": "DeclineFriendRequests",
+        "responses": {},
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "GetAllFriends",
+        "responses": {}
+      }
+    },
+    "/messages/direct": {
+      "post": {
+        "summary": "SendDirectMessage",
+        "responses": {}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
