@@ -7,12 +7,13 @@ const ProtectedRoute = () => {
   const [starting, setStarting] = useState(true);
 
   const init = async () => {
-    // có thể xảy ra khi refresh trang
+    const { accessToken, refresh, fetchMe } = useAuthStore.getState();
     if (!accessToken) {
       await refresh();
     }
 
-    if (accessToken && !user) {
+    const state = useAuthStore.getState();
+    if (state.accessToken && !state.user) {
       await fetchMe();
     }
 

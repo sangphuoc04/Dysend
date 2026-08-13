@@ -52,7 +52,7 @@ export const useAuthStore = create<AuthState>()(
           await get().fetchMe();
           useChatStore.getState().fetchConversations();
 
-          toast.success("Chào mừng bạn quay lại với Moji 🎉");
+          toast.success("Chào mừng bạn quay lại với Dysend 🎉");
         } catch (error) {
           console.error(error);
           toast.error("Đăng nhập không thành công!");
@@ -95,10 +95,15 @@ export const useAuthStore = create<AuthState>()(
           if (!user) {
             await fetchMe();
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error(error);
-          toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
-          get().clearState();
+          const status = error?.response?.status;
+          if (status === 401 || status === 403) {
+            toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+            get().clearState();
+          } else {
+            toast.error("Không thể kết nối tới máy chủ. Vui lòng thử lại!");
+          }
         } finally {
           set({ loading: false });
         }
@@ -106,7 +111,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
-      partialize: (state) => ({ user: state.user }), // chỉ persist user
+      partialize: (state) => ({ user: state.user }), 
     }
   )
 );
