@@ -99,7 +99,7 @@ export const useAuthStore = create<AuthState>()(
           console.error(error);
           const status = error?.response?.status;
           if (status === 401 || status === 403) {
-            toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
+            // toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!");
             get().clearState();
           } else {
             toast.error("Không thể kết nối tới máy chủ. Vui lòng thử lại!");
